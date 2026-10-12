@@ -11,7 +11,9 @@ test.describe('Uchi.ru widget ', () => {
     await page.goto('/');
 
     // close cookies popup
-    await page.click('._UCHI_COOKIE__button');
+    const cookieButton = page.locator('._UCHI_COOKIE__button').first();
+    await cookieButton.waitFor({ state: 'visible', timeout: 5000 }).catch(() => undefined);
+    if (await cookieButton.isVisible()) await cookieButton.click();
   });
 
   test('opens', async ({page}) => {
@@ -25,10 +27,19 @@ test.describe('Uchi.ru widget ', () => {
 
     const articles = await widgetPage.getPopularArticles();
 
-    await articles[0].click();
+    await expect(articles.first()).toBeVisible();
+    await articles.first().click();
 
     await widgetPage.clickWriteToUs();
 
     expect(await widgetPage.getTitle()).toEqual('Связь с поддержкой');
+  });
+
+  test('closes', async ({ page }) => {
+    await widgetPage.openWidget();
+    await expect(widgetPage.getWidgetBody()).toBeVisible();
+    
+    await widgetPage.closeWidget();
+    await expect(widgetPage.getWidgetBody()).not.toBeVisible();
   });
 });

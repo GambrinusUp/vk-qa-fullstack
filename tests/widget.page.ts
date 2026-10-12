@@ -5,10 +5,11 @@ enum WidgetPageSelectors {
     WIDGET_BODY = '[class^=widgetWrapper] > [class^=widget__]',
     HEADER_TEXT = 'header h5',
     BUTTON_OPEN = '[data-test=openWidget]',
-    BUTTON_WRITE_TO_US = '[class^=btn]',
+    BUTTON_WRITE_TO_US = 'button[class^=cbutton]:has-text("Написать нам")',
     ARTICLE_POPULAR_TITLE = '[class^=popularTitle__]',
     ARTICLE_POPULAR_LIST = `${ARTICLE_POPULAR_TITLE} + ul[class^=articles__]`,
     ARTICLE_POPULAR_LIST_ITEM = `${ARTICLE_POPULAR_LIST} > li`,
+    BUTTON_CLOSE_WIDGET = 'button[class^=closeBtn__]',
 }
 
 export class WidgetPage {
@@ -25,7 +26,7 @@ export class WidgetPage {
     }
 
     async getPopularArticles() {
-        return this.wrapper().locator(WidgetPage.selector.ARTICLE_POPULAR_LIST_ITEM).all()
+        return this.wrapper().locator(WidgetPage.selector.ARTICLE_POPULAR_LIST_ITEM);
     }
 
     async clickWriteToUs() {
@@ -36,8 +37,11 @@ export class WidgetPage {
         return this.wrapper().locator(WidgetPage.selector.HEADER_TEXT).textContent();
     }
 
+    async closeWidget() {
+        return this.page.locator(WidgetPage.selector.BUTTON_CLOSE_WIDGET).click();
+    }
+
     getWidgetBody() {
         return this.page.locator(WidgetPage.selector.WIDGET_BODY);
     }
 }
-
